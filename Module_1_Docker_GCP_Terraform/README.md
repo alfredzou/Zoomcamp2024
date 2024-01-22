@@ -51,3 +51,17 @@ docker run -it \
         --table_name=yellow_taxi_cab \
         --csv_url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
 ```
+
+``` bash
+# Updated for new docker compose host and network
+docker run -it \
+    --network=pg_package \
+    taxi_ingest:v003 \
+        --user=root \
+        --password=root \
+        --host=pgdatabase \
+        --port=5432 \
+        --database=ny_taxi \
+        --table_name=yellow_taxi_cab \
+        --csv_url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
+```

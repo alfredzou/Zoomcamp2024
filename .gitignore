@@ -6,3 +6,4 @@ ny_taxi_postgres_data/
 *.json
 __pycache__/
 .ipynb_checkpoints/
+data/
