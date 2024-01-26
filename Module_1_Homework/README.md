@@ -71,23 +71,49 @@ You will also need the dataset with zones:
 Download this data and put it into Postgres (with jupyter notebooks or with a pipeline)
 
 ``` bash
+# Running locally
 python -m ingest \
---user root \
---password root \
---host localhost \
---port 5432 \
---database taxi_ny \
---ingest_type green_taxi_trip \
---url https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz
+--user=root \
+--password=root \
+--host=localhost \
+--port=5432 \
+--database=taxi_ny \
+--ingest_type=green_taxi_trip \
+--url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz
 
 python -m ingest \
---user root \
---password root \
---host localhost \
---port 5432 \
---database taxi_ny \
---ingest_type taxi_zone_lookup \
---url https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv
+--user=root \
+--password=root \
+--host=localhost \
+--port=5432 \
+--database=taxi_ny \
+--ingest_type=taxi_zone_lookup \
+--url=https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv
+```
+
+``` bash
+# Running through docker
+docker run -it \
+--network=homework_ingest \
+ingest_taxi:v002 \
+--user=root \
+--password=root \
+--host=pgdatabase \
+--port=5432 \
+--database=taxi_ny \
+--ingest_type=green_taxi_trip \
+--url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz
+
+docker run -it \
+--network=homework_ingest \
+ingest_taxi:v002 \
+--user=root \
+--password=root \
+--host=pgdatabase \
+--port=5432 \
+--database=taxi_ny \
+--ingest_type=taxi_zone_lookup \
+--url=https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv
 ```
 
 ## Question 3. Count records 
@@ -103,6 +129,16 @@ Remember that `lpep_pickup_datetime` and `lpep_dropoff_datetime` columns are in 
 - 15859
 - 89009
 
+``` sql
+select count(*)
+from green_taxi_trip 
+where date(lpep_pickup_datetime) = '2019-09-18'
+	and date(lpep_dropoff_datetime) = '2019-09-18'
+
+"count"
+15612
+```
+
 ## Question 4. Largest trip for each day
 
 Which was the pick up day with the largest trip distance
@@ -113,6 +149,16 @@ Use the pick up time for your calculations.
 - 2019-09-26
 - 2019-09-21
 
+``` sql
+select date(lpep_pickup_datetime), max(trip_distance) as max_dist
+from green_taxi_trip 
+group by date(lpep_pickup_datetime)
+order by max(trip_distance) desc
+limit 1
+
+"date"	      "max_dist"
+"2019-09-26"	341.64
+```
 
 ## Question 5. Three biggest pick up Boroughs
 
@@ -125,6 +171,21 @@ Which were the 3 pick up Boroughs that had a sum of total_amount superior to 500
 - "Bronx" "Manhattan" "Queens" 
 - "Brooklyn" "Queens" "Staten Island"
 
+``` sql
+select "Borough", sum(total_amount) from green_taxi_trip gt
+left join (select * from taxi_zone_lookup
+			where "Borough" <> 'Unknown') tz
+on gt."PULocationID" = tz."LocationID"
+where date(lpep_pickup_datetime) = '2019-09-18'
+group by "Borough"
+having sum(total_amount) > 50000
+order by sum(total_amount) desc
+
+"Borough"	"sum"
+"Brooklyn"	96333.24000000113
+"Manhattan"	92271.30000000274
+"Queens"	78671.71000000101
+```
 
 ## Question 6. Largest tip
 
@@ -138,6 +199,28 @@ Note: it's not a typo, it's `tip` , not `trip`
 - JFK Airport
 - Long Island City/Queens Plaza
 
+``` sql
+with tz as (select * from taxi_zone_lookup
+			where "Borough" <> 'Unknown')
+
+select tz_dropoff."Zone", max(tip_amount) as largest_tip from green_taxi_trip gt
+left join tz tz_pickup on gt."PULocationID" = tz_pickup."LocationID"
+left join tz tz_dropoff on gt."DOLocationID" = tz_dropoff."LocationID" 
+where EXTRACT('year' from lpep_pickup_datetime) = 2019
+	and EXTRACT('month' from lpep_pickup_datetime) = 09
+	and tz_pickup."Zone" = 'Astoria'
+	and tz_dropoff."Zone" IS NOT NULL
+group by tz_dropoff."Zone"
+order by max(tip_amount) desc
+limit 5;
+
+"Zone"	"largest_tip"
+"JFK Airport"	62.31
+"Woodside"	30
+"Kips Bay"	28
+"Astoria"	20
+"Upper West Side South"	20
+```
 
 
 ## Terraform

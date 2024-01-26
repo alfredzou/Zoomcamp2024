@@ -84,25 +84,3 @@ if __name__ == "__main__":
             print("Pass either 'green_taxi_trip' or 'taxi_zone_lookup' for ingest_type")
     finally:
         con.close()
-
-    """
-    python -m ingest \
-    --user root \
-    --password root \
-    --host localhost \
-    --port 5432 \
-    --database taxi_ny \
-    --ingest_type green_taxi_trip \
-    --url https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz
-    """
-
-    """
-    python -m ingest \
-    --user root \
-    --password root \
-    --host localhost \
-    --port 5432 \
-    --database taxi_ny \
-    --ingest_type taxi_zone_lookup \
-    --url https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv
-    """
