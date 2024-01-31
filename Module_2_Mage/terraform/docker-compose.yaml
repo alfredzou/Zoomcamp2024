@@ -1,0 +1,30 @@
+name: pg_mage
+services:
+  pgdatabase:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/pgdatabase:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: taxi_ny
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: root
+
+  mage:
+    image: mageai/mageai:latest
+    ports:
+      - 6789:6789
+    volumes:
+      - ./data/mage:/home/src/
+    restart: on-failure:5
