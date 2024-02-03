@@ -1,0 +1,134 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: data_exporters/green_taxi_to_pg.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: green_taxi_to_pg
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - snake_case_columns
+  uuid: green_taxi_to_pg
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: transformers/lpep_pickup_date.py
+  downstream_blocks:
+  - snake_case_columns
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: lpep_pickup_date
+  retry_config: null
+  status: executed
+  timeout: null
+  type: transformer
+  upstream_blocks:
+  - remove_zero_pax_distance
+  uuid: lpep_pickup_date
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: transformers/snake_case_columns.py
+  downstream_blocks:
+  - green_taxi_to_pg
+  - green_taxi_to_partition
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: snake_case_columns
+  retry_config: null
+  status: executed
+  timeout: null
+  type: transformer
+  upstream_blocks:
+  - lpep_pickup_date
+  uuid: snake_case_columns
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: data_loaders/load_green_taxi_hw.py
+  downstream_blocks:
+  - remove_zero_pax_distance
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: load_green_taxi_hw
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: load_green_taxi_hw
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - lpep_pickup_date
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: remove_zero_pax_distance
+  retry_config: null
+  status: executed
+  timeout: null
+  type: transformer
+  upstream_blocks:
+  - load_green_taxi_hw
+  uuid: remove_zero_pax_distance
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: green_taxi_to_partition
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - snake_case_columns
+  uuid: green_taxi_to_partition
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals: []
+created_at: '2024-02-03 00:08:44.566299+00:00'
+data_integration: null
+description: null
+executor_config: {}
+executor_count: 1
+executor_type: null
+extensions: {}
+name: green_taxi_etl_homework
+notification_config: {}
+remote_variables_dir: null
+retry_config: {}
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags: []
+type: python
+updated_at: '2024-02-03T01:43:20+00:00'
+uuid: green_taxi_etl_homework
+variables_dir: /home/src/mage_data/default_repo
+widgets: []
