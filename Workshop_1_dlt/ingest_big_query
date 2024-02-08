@@ -1,0 +1,14 @@
+import os
+import dlt
+from ingest_stream_download import stream_download_jsonl
+
+os.environ['GOOGLE_CLOUD_PROJECT'] = 'dlt-dev-external'
+url = "https://storage.googleapis.com/dtc_zoomcamp_api/yellow_tripdata_2009-06.jsonl"
+
+# Define your pipeline
+pipeline = dlt.pipeline(
+    pipeline_name='my_pipeline',
+    destination='bigquery',
+    dataset_name='dtc'
+)
+
