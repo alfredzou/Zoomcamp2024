@@ -43,7 +43,7 @@ def generator(year,month):
 
 if __name__ == "__main__":
     pipeline = dlt.pipeline(
-    pipeline_name='my_pipeline',
+    pipeline_name='my_pipeline_mod3_hw',
     destination='filesystem',
     dataset_name='ny_taxi'
     )
