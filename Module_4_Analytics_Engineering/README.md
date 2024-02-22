@@ -16,3 +16,7 @@ OPTIONS (
 format = 'parquet',
 uris = ['gs://sharp-harbor-411301-bucket/ny_taxi_mod4/fhv/*.parquet']);
 ```
+
+# Looker Dashboard
+
+![](dashboard.png)
