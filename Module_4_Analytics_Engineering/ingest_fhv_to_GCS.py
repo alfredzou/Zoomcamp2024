@@ -20,7 +20,7 @@ def generator(year,month):
     parse_dates = ['pickup_datetime', 'dropOff_datetime']
     url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_{year}-{month}.csv.gz"
     print(url)
-    for chunk in pd.read_csv(url,chunksize=1000,compression="gzip", dtype=taxi_dtypes, parse_dates=parse_dates):
+    for chunk in pd.read_csv(url,chunksize=100000,compression="gzip", dtype=taxi_dtypes, parse_dates=parse_dates):
         yield chunk
 
 # Define your pipeline
