@@ -10,3 +10,4 @@ data/
 mage-zoomcamp/
 .dlt/
 logs/
+*.gz
