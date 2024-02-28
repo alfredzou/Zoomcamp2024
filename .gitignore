@@ -11,3 +11,6 @@ mage-zoomcamp/
 .dlt/
 logs/
 *.gz
+*.parquet
+_SUCCESS
+*.crc

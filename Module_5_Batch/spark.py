@@ -31,14 +31,14 @@ class MySpark:
 
     @timer
     def spark_infer_schema(self):
-        df = self.spark.read \
+        self.df = self.spark.read \
         .option("header", "true") \
         .option("inferSchema", "true") \
         .csv('fhvhv_tripdata_2021-01.csv.gz')
 
     @timer
     def spark_read_as_string(self):
-        df = self.spark.read \
+        self.df = self.spark.read \
         .option("header", "true") \
         .csv('fhvhv_tripdata_2021-01.csv.gz')
 
@@ -55,11 +55,21 @@ class MySpark:
             ]
         )     
 
-        df = self.spark.read \
+        self.df = self.spark.read \
         .option("header", "true") \
         .schema(schema) \
         .csv('fhvhv_tripdata_2021-01.csv.gz')
 
+
+    @timer
+    def save_parquet(self):
+        self.df.write.parquet('save_parquet/',mode='overwrite')
+
+    @timer
+    def repartition_save_parquet(self):
+        df = self.df.repartition(24)
+        df.write.parquet('repartition_save_parquet/',mode='overwrite')
+        
 if __name__ == "__main__":
     url = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhvhv/fhvhv_tripdata_2021-01.csv.gz"
     download_if_not_exists(url)
@@ -67,3 +77,6 @@ if __name__ == "__main__":
     spark.spark_infer_schema()
     spark.spark_read_as_string()
     spark.spark_schema_provided()
+    spark.save_parquet()
+    spark.repartition_save_parquet()
+    time.sleep(1000)
