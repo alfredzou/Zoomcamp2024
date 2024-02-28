@@ -15,17 +15,16 @@ provider "google" {
 }
 
 resource "google_compute_address" "default" {
-  name   = "postgres-mage-static-ip"
-  region = var.region
+  name   = "batch-static-ip"
 }
 
 resource "google_service_account" "default" {
-  account_id   = "postgres-mage-sa"
-  display_name = "postgres and mage service account"
+  account_id   = "batch-sa"
+  display_name = "batch service account"
 }
 
 resource "google_compute_instance" "default" {
-  name         = "postgres-mage-vm"
+  name         = "batch-vm"
   machine_type = "e2-standard-4"
 
   boot_disk {
@@ -44,15 +43,11 @@ resource "google_compute_instance" "default" {
     }
   }
 
-  metadata = {
-    account = var.vm_account
-  }
-
-  metadata_startup_script = "${file("init.sh")}"
-
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
     email  = google_service_account.default.email
     scopes = ["cloud-platform"]
   }
+
 }
+

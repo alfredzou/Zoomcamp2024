@@ -14,8 +14,3 @@ variable "credentials" {
     description = "My Credential Location"
     default = "~/.gcp/pg_mage_gcp.json"
 }
-
-variable "vm_account" {
-    description = "Virtual machine login account"
-    default = "pg_mage"
-}

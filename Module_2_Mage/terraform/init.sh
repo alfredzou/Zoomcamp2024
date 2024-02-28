@@ -5,7 +5,7 @@ cd /home/$account
 
 # prepare 
 mkdir -p ./data/pgadmin
-chown -R 5050:5050 ./data/pgadmin
+sudo chown -R 5050:5050 ./data/pgadmin
 
 # Install docker and docker compose
 curl -fsSL https://get.docker.com -o install-docker.sh
@@ -16,5 +16,5 @@ wget https://raw.githubusercontent.com/alfredzou/Zoomcamp2024/main/Module_2_Mage
 
 # # Allow the running of docker without sudo
 groupadd docker
-usermod -aG docker $account
+sudo usermod -aG docker $account
 newgrp docker
