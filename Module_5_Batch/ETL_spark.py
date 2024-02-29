@@ -79,4 +79,3 @@ if __name__ == "__main__":
     spark.spark_schema_provided()
     spark.save_parquet()
     spark.repartition_save_parquet()
-    time.sleep(1000)
