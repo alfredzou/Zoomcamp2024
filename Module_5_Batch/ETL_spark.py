@@ -73,9 +73,12 @@ class MySpark:
 if __name__ == "__main__":
     url = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhvhv/fhvhv_tripdata_2021-01.csv.gz"
     download_if_not_exists(url)
-    spark = MySpark()
-    spark.spark_infer_schema()
-    spark.spark_read_as_string()
-    spark.spark_schema_provided()
-    spark.save_parquet()
-    spark.repartition_save_parquet()
+    my_spark = MySpark()
+    try:
+        my_spark.spark_infer_schema()
+        my_spark.spark_read_as_string()
+        my_spark.spark_schema_provided()
+        my_spark.save_parquet()
+        my_spark.repartition_save_parquet()
+    finally:
+        my_spark.spark.stop()

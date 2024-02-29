@@ -54,15 +54,6 @@ class MySpark:
             .select('pickup_date','dropoff_date','PULocationID','DOLocationID') \
             .show()
         
-    # def crazy_stuff(base_num):
-    #     num = int(base_num[1:])
-    #     if num % 7 == 0:
-    #         return f's/{num:03x}'
-    #     elif num % 3 == 0:
-    #         return f'a/{num:03x}'
-    #     else:
-    #         return f'e/{num:03x}'
-    
     @timer
     def udf(self):
         crazy_stuff_udf = F.udf(crazy_stuff,returnType=types.StringType())
@@ -73,8 +64,11 @@ class MySpark:
             .show()
 
 if __name__ == "__main__":
-    spark = MySpark()
-    spark.repartition_load_parquet()
-    spark.print_schema()
-    spark.datetime_to_date()
-    spark.udf()
+    my_spark = MySpark()
+    try:
+        my_spark.repartition_load_parquet()
+        my_spark.print_schema()
+        my_spark.datetime_to_date()
+        my_spark.udf()
+    finally:
+        my_spark.spark.stop()

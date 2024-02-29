@@ -112,18 +112,18 @@ if __name__ == "__main__":
         download_if_not_exists(taxi_type)
 
     green_spark = MySpark('green')
-    
-    year = ['2020','2021']
-    month = [f"{i:02}" for i in range(1,13)]
-    for year, month in itertools.product(year, month):
-        df = green_spark.spark_schema_provided(year, month)
-        green_spark.repartition_save_parquet(df, year, month)
-
-
-    year = ['2020','2021']
-    month = [f"{i:02}" for i in range(1,13)]
     yellow_spark = MySpark('yellow')
 
-    for year, month in itertools.product(year, month):
-        df = yellow_spark.spark_schema_provided(year, month)
-        yellow_spark.repartition_save_parquet(df, year, month)
+    spark_instance_list = [green_spark, yellow_spark]
+    year = ['2020','2021']
+    month = [f"{i:02}" for i in range(1,13)]
+
+    try:
+        for spark_instance, year, month in itertools.product(spark_instance_list, year, month):
+            print(f'Working on {spark_instance.type}_taxi {year}/{month}')
+            df = spark_instance.spark_schema_provided(year, month)
+            spark_instance.repartition_save_parquet(df, year, month)
+    finally:
+        green_spark.spark.stop()
+        yellow_spark.spark.stop()
+        print('stopped green_spark and yellow_spark instances')
