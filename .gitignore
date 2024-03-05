@@ -14,3 +14,4 @@ logs/
 *.parquet
 _SUCCESS
 *.crc
+*.jar
