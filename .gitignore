@@ -12,3 +12,8 @@ mage-zoomcamp/
 logs/
 gitclones/
 Common_Crawl_Pipeline
+*.gz
+*.parquet
+_SUCCESS
+*.crc
+*.jar
